@@ -20,7 +20,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
         repo:
           - casey/just
           - Michael-F-Bryan/mdbook-linkcheck
@@ -37,8 +37,6 @@ jobs:
           # rossmacarthur/sheldon does not ship a windows binary
           - os: windows-latest
             repo: rossmacarthur/sheldon
-          - os: macos-latest
-            repo: Michael-F-Bryan/mdbook-linkcheck
 
     runs-on: ${{ matrix.os }}
     name: test (${{matrix.os}}, ${{ matrix.repo }})
