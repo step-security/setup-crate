@@ -22,7 +22,8 @@ jobs:
   test:
     strategy:
       matrix:
-        os: ${{ github.actor == 'dependabot[bot]' && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest", "windows-latest"]') }}
+        os: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
+          && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest","windows-latest","macos-latest"]') }}
         repo:
           - casey/just
           - Michael-F-Bryan/mdbook-linkcheck
@@ -31,10 +32,6 @@ jobs:
           - rust-lang/mdBook
           - rustwasm/wasm-bindgen
           - sharkdp/hyperfine
-        include:
-          # rossmacarthur/powerpack only ships a macos binary
-          - os: ${{ github.actor == 'dependabot[bot]' || fromJSON('macos-latest') }}
-            repo: rossmacarthur/powerpack
         exclude:
           # rossmacarthur/sheldon does not ship a windows binary
           - os: windows-latest
