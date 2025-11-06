@@ -1,0 +1,53 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+    - run: npm ci
+    - run: npm run lint
+    - run: npm run build
+
+  test:
+    strategy:
+      matrix:
+        os: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
+          && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest","windows-latest"]') }}
+        repo:
+          - casey/just
+          - Michael-F-Bryan/mdbook-linkcheck
+          - rossmacarthur/sheldon
+          - rust-embedded/cross
+          - rust-lang/mdBook
+          - rustwasm/wasm-bindgen
+          - sharkdp/hyperfine
+        exclude:
+          # rossmacarthur/sheldon does not ship a windows binary
+          - os: windows-latest
+            repo: rossmacarthur/sheldon
+
+    runs-on: ${{ matrix.os }}
+    name: test (${{matrix.os}}, ${{ matrix.repo }})
+    steps:
+    - uses: actions/checkout@v5
+    - name: Setup ${{ matrix.repo }}
+      uses: ./
+      with:
+        repo: ${{ matrix.repo }}
+      env:
+        ACTIONS_STEP_DEBUG: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Test
+      run: which $(printf ${{ matrix.repo }} | awk -F '/' '{print $2}' | tr '[:upper:]' '[:lower:]')
+      shell: bash

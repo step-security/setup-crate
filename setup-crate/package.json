@@ -1,0 +1,43 @@
+{
+  "name": "@step-security/setup-crate",
+  "version": "0.5.0",
+  "description": "Install a Rust crate.",
+  "author": "step-security",
+  "license": "MIT",
+  "homepage": "https://github.com/step-security/setup-crate#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/step-security/setup-crate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/step-security/setup-crate/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "fmt": "prettier --write src/**/*.ts",
+    "lint": "eslint src/**/*.ts"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/tool-cache": "^2.0.1",
+    "@octokit/rest": "^21.0.0",
+    "semver": "^7.3.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/semver": "^7.5.8",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.3"
+  }
+}
