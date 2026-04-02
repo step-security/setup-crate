@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/step-security/setup-crate#readme",
   "dependencies": {
-    "@actions/core": "^1.10.1",
+    "@actions/core": "^2.0.0",
     "@step-security/setup-crate": "^0.5.0",
-    "axios": "1.13.1"
+    "axios": "^1.13.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
