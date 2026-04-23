@@ -7,6 +7,10 @@ on:
         description: "Base branch to create the PR against"
         required: true
         default: "main"
+      node_version:
+        description: "Specify Node.js version (e.g., '18', '20', 'lts/*')"
+        required: false
+        default: "24"
       mode:
         description: "Run mode: cherry-pick or verify"
         required: false
@@ -30,3 +34,4 @@ jobs:
       repo-name: "setup-crate"
       base_branch: ${{ inputs.base_branch }}
       mode: ${{ github.event_name == 'pull_request' && 'verify' || inputs.mode }}
+      node_version: "${{ inputs.node_version || '24' }}"

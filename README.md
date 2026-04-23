@@ -1,3 +1,5 @@
+[![StepSecurity Maintained Action](https://raw.githubusercontent.com/step-security/maintained-actions-assets/main/assets/maintained-action-banner.png)](https://docs.stepsecurity.io/actions/stepsecurity-maintained-actions)
+
 # setup-crate
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/step-security/setup-crate/build.yaml?branch=trunk)](https://github.com/step-security/setup-crate/actions/workflows/build.yaml)
