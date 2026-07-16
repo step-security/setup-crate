@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import * as setup from "@step-security/setup-crate";
+import * as setup from "@extractions/setup-crate";
 import axios, { isAxiosError } from "axios";
 import * as fs from "fs";
 
@@ -47,10 +47,9 @@ async function validateSubscription(): Promise<void> {
   }
 }
 
-
 async function main() {
-  await validateSubscription();
   try {
+    await validateSubscription();
     const repoSpec = core.getInput("repo");
     let owner = core.getInput("owner");
     let name = core.getInput("name");
