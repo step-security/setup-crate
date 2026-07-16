@@ -41,5 +41,8 @@
   },
   "workspaces": [
     "./setup-crate"
-  ]
+  ],
+  "overrides": {
+    "undici": "^6.27.0"
+  }
 }
