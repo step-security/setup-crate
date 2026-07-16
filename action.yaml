@@ -1,5 +1,5 @@
 name: 'Setup crate'
-author: 'step-security'
+author: step-security
 description: 'Install any Rust crate'
 branding:
   icon: 'settings'

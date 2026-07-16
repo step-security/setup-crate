@@ -2,55 +2,54 @@ name: build
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+  schedule:
+    - cron: 0 12 1 * *
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Harden the runner (Audit all outbound calls)
-      uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
-      with:
-        egress-policy: audit
-
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
       with:
         node-version: '24'
     - run: npm ci
     - run: npm run lint
     - run: npm run build
+    - run: git diff --exit-code dist/index.js
 
   test:
     strategy:
       matrix:
-        os: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
-          && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest","windows-latest"]') }}
+        os: [ubuntu-latest, macos-latest, windows-latest]
         repo:
           - casey/just
+          - catppuccin/whiskers
           - Michael-F-Bryan/mdbook-linkcheck
           - rossmacarthur/sheldon
           - rust-embedded/cross
           - rust-lang/mdBook
           - rustwasm/wasm-bindgen
           - sharkdp/hyperfine
+        include:
+          # rossmacarthur/powerpack only ships a macos binary
+          - os: macos-latest
+            repo: rossmacarthur/powerpack
         exclude:
           # rossmacarthur/sheldon does not ship a windows binary
           - os: windows-latest
             repo: rossmacarthur/sheldon
+          # macOS aarch64 binaries are not available for mdBook
+          - os: macos-latest
+            repo: Michael-F-Bryan/mdbook-linkcheck
+          # macOS aarch64 binaries are not available for cross
+          - os: macos-latest
+            repo: rust-embedded/cross
 
     runs-on: ${{ matrix.os }}
     name: test (${{matrix.os}}, ${{ matrix.repo }})
     steps:
-    - name: Harden the runner (Audit all outbound calls)
-      uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
-      with:
-        egress-policy: audit
-
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@v6
     - name: Setup ${{ matrix.repo }}
       uses: ./
       with:
