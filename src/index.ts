@@ -1,38 +1,45 @@
 import * as core from "@actions/core";
-import * as setup from "@extractions/setup-crate";
+import * as setup from "@step-security/setup-crate";
+import axios, { isAxiosError } from "axios";
+import * as fs from "fs";
 
-async function validateSubscription() {
-  const fs = require("fs");
-  let repoPrivate;
+async function validateSubscription(): Promise<void> {
   const eventPath = process.env.GITHUB_EVENT_PATH;
+  let repoPrivate: boolean | undefined;
+
   if (eventPath && fs.existsSync(eventPath)) {
-    const payload = JSON.parse(fs.readFileSync(eventPath, "utf8"));
-    repoPrivate = payload?.repository?.private;
+    const eventData = JSON.parse(fs.readFileSync(eventPath, "utf8"));
+    repoPrivate = eventData?.repository?.private;
   }
+
   const upstream = "extractions/setup-crate";
   const action = process.env.GITHUB_ACTION_REPOSITORY;
-  const docsUrl = "https://docs.stepsecurity.io/actions/stepsecurity-maintained-actions";
-  const core = require("@actions/core");
-  const axios = require("axios");
+  const docsUrl =
+    "https://docs.stepsecurity.io/actions/stepsecurity-maintained-actions";
+
   core.info("");
   core.info("StepSecurity Maintained Action");
   core.info(`Secure drop-in replacement for ${upstream}`);
   if (repoPrivate === false) core.info("✓ Free for public repositories");
   core.info(`Learn more: ${docsUrl}`);
   core.info("");
+
   if (repoPrivate === false) return;
+
   const serverUrl = process.env.GITHUB_SERVER_URL || "https://github.com";
-  const body = { action: action || "" };
+  const body: Record<string, string> = { action: action || "" };
   if (serverUrl !== "https://github.com") body.ghes_server = serverUrl;
   try {
     await axios.post(
       `https://agent.api.stepsecurity.io/v1/github/${process.env.GITHUB_REPOSITORY}/actions/maintained-actions-subscription`,
       body,
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
   } catch (error) {
-    if (axios.isAxiosError?.(error) && error.response?.status === 403) {
-      core.error("This action requires a StepSecurity subscription for private repositories.");
+    if (isAxiosError(error) && error.response?.status === 403) {
+      core.error(
+        "This action requires a StepSecurity subscription for private repositories."
+      );
       core.error(`Learn how to enable a subscription: ${docsUrl}`);
       process.exit(1);
     }
