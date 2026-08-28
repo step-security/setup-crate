@@ -1,13 +1,14 @@
 {
   "name": "setup-crate-action",
-  "version": "1.4.0",
+  "version": "2.0.1",
   "description": "Install any Rust crate",
   "main": "dist/index.js",
+  "type": "module",
   "private": true,
   "scripts": {
     "fmt": "prettier --write **/*.ts",
     "lint": "eslint **/*.ts",
-    "build": "npm run -w setup-crate build && rm -rf dist/ && ncc build src/index.ts --minify",
+    "build": "npm run -w setup-crate build && rm -rf dist/ && ncc build src/index.ts -o dist --minify",
     "run": "npm run build && RUNNER_TOOL_CACHE=./runner/cache RUNNER_TEMP=./runner/temp node dist/index.js"
   },
   "repository": {
@@ -21,19 +22,22 @@
   },
   "homepage": "https://github.com/step-security/setup-crate#readme",
   "dependencies": {
-    "@actions/core": "^2.0.0",
-    "@step-security/setup-crate": "^0.5.0",
-    "axios": "^1.13.1"
+    "@actions/core": "^3.0.0",
+    "@extractions/setup-crate": "^0.6.0",
+    "axios": "^1.19.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
-    "@types/semver": "^7.5.8",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.0",
+    "@types/semver": "^7.7.1",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
     "@vercel/ncc": "^0.38.4",
-    "eslint": "^8.56.0",
-    "prettier": "^3.3.2",
-    "typescript": "^5.5.3"
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
   },
   "workspaces": [
     "./setup-crate"

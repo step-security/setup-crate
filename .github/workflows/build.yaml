@@ -23,14 +23,16 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run build
+    - run: git diff --exit-code dist/index.js
 
   test:
     strategy:
       matrix:
         os: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
-          && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest","windows-latest"]') }}
+          && fromJSON('["ubuntu-latest"]') || fromJSON('["ubuntu-latest",  "macos-latest", "windows-latest"]') }}
         repo:
           - casey/just
+          - catppuccin/whiskers
           - Michael-F-Bryan/mdbook-linkcheck
           - rossmacarthur/sheldon
           - rust-embedded/cross
@@ -41,6 +43,12 @@ jobs:
           # rossmacarthur/sheldon does not ship a windows binary
           - os: windows-latest
             repo: rossmacarthur/sheldon
+          # macOS aarch64 binaries are not available for mdBook
+          - os: macos-latest
+            repo: Michael-F-Bryan/mdbook-linkcheck
+          # macOS aarch64 binaries are not available for cross
+          - os: macos-latest
+            repo: rust-embedded/cross
 
     runs-on: ${{ matrix.os }}
     name: test (${{matrix.os}}, ${{ matrix.repo }})
