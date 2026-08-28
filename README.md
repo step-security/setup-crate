@@ -21,6 +21,7 @@ This action will work for any project that satisfies the following conditions:
   | `x64`   | `win32`       | `x86_64-pc-windows-msvc`                                    |
   | `arm64` | `linux`       | `aarch64-unknown-linux-musl` or `aarch64-unknown-linux-gnu` |
   | `arm64` | `darwin`      | `aarch64-apple-darwin`                                      |
+  | `arm64` | `win32`       | `aarch64-pc-windows-msvc`                                   |
 
 - The asset is a `.tar.gz` or `.zip` archive that contains a binary with the
   project name.
@@ -34,7 +35,7 @@ project in your workflow. For example the following installs the latest version
 of [mdBook](https://github.com/rust-lang/mdBook).
 
 ```yaml
-- uses: step-security/setup-crate@v1
+- uses: step-security/setup-crate@v2
   with:
     repo: rust-lang/mdBook
 ```
@@ -44,7 +45,7 @@ input. For example the following installs the latest `0.10.x` version of
 [just](https://github.com/casey/just).
 
 ```yaml
-- uses: step-security/setup-crate@v1
+- uses: step-security/setup-crate@v2
   with:
     repo: casey/just@0.10
 ```
